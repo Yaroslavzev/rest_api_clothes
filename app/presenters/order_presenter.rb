@@ -10,16 +10,15 @@ class OrderPresenter
   def call
     {
       delivery_date: Date.today + 2,
-      shipments: items,
+      shipments: items
     }
   end
-  
+
   def items
     target.map do |object|
       { supplier: object[:supplier],
-        delivery_date: object[:delivery_times]["us"],
-        count: object[:in_stock]
-      }
-    end    
+        delivery_date: object[:delivery_times]['us'],
+        count: object[:in_stock] }
+    end
   end
 end

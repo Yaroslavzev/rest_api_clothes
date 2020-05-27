@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
@@ -24,10 +26,10 @@ gem 'bootsnap', '>= 1.4.2', require: false
 # gem 'rack-cors'
 
 group :development, :test do
-  gem "pry"
-  gem "rspec-rails"
-  gem "rubocop", require: false
-  gem "awesome_print", require: "ap"
+  gem 'awesome_print', require: 'ap'
+  gem 'pry'
+  gem 'rspec-rails'
+  gem 'rubocop', require: false
 end
 
 group :development do

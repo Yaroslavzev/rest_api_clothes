@@ -9,9 +9,9 @@ class StocksController < ApplicationController
     @stocks = ResolverService.call(stock_params)
     # OrderPresenter
     # Stock.all
-    
+
     # binding.pry
-    @nnn=OrderPresenter.new(@stocks).call
+    @nnn = OrderPresenter.new(@stocks).call
     render json: @nnn
   end
 
@@ -20,19 +20,20 @@ class StocksController < ApplicationController
     binding.pry
     render json: @stock
   end
-  # 
+
+  #
   # POST /stocks
   def create
     binding.pry
     @stock = Stock.new(stock_params)
-  
+
     if @stock.save
       render json: @stock, status: :created, location: @stock
     else
       render json: @stock.errors, status: :unprocessable_entity
     end
   end
-  
+
   # PATCH/PUT /stocks/1
   def update
     binding.pry
@@ -42,21 +43,22 @@ class StocksController < ApplicationController
       render json: @stock.errors, status: :unprocessable_entity
     end
   end
-  
+
   # DELETE /stocks/1
   def destroy
     @stock.destroy
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_stock
-      @stock = Stock.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def stock_params
-      # booking: {orders: [{ product_name: "pink_t-shirt", value: 2}], destination: "us"}
-      params.require(:order).permit(:shipping_region, items: [:product_name, :value])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_stock
+    @stock = Stock.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def stock_params
+    # booking: {orders: [{ product_name: "pink_t-shirt", value: 2}], destination: "us"}
+    params.require(:order).permit(:shipping_region, items: %i[product_name value])
+  end
 end

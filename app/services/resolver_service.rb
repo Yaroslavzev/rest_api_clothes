@@ -9,7 +9,7 @@ class ResolverService < ApplicationService
   def call
     if search[:items].count == 1
       SingleSearchService.call(search)
-    else 
+    else
       MultiSearchService.call(search)
     end
   end
