@@ -1,42 +1,38 @@
 # frozen_string_literal: true
 
-class SearchService < ApplicationService
-  attr_reader :search
-
-  def initialize(search)
-    @search = search
-  end
-
+class MultiSearchService < BaseSearchService
   def call
-    Stock.yield_self(&method(:suppliers))
-         .yield_self(&method(:find_common_suppliers))
-         .yield_self(&method(:departure_country))
+    items_by_one = Stock.yield_self(&method(:suppliers))
+                       .yield_self(&method(:find_common_suppliers))
 
+    items_by_one = results(items_by_one)
+    
+    items_by_many = items.map do |order| 
+      SingleSearchService.call([order], shipping_region)
+    end
+
+    date = max_delivery_date(items_by_many, items_by_one)
+    
+    return items_by_one if date[:delivery_date] <= date[:max_delivery_date]
+    items_by_many
   end
 
   private
-
+  
+  def max_delivery_date(items_by_many, items_by_one)
+    items_by_many.each_with_object(delivery_date: items_by_one[:delivery_date])  do |k, hash|
+      hash[:max_delivery_date] = k[:delivery_date] if hash[:delivery_date] <= k[:delivery_date]
+    end
+  end
+    
   def suppliers(scope)
-    queries = search[:items].map do |order| 
-      scope.where(product_name: order[:product_name])
-           .where(":value <= in_stock", value: order[:value]) 
-                   
-         end
-
-    scope = Stock.from("(#{queries[0].to_sql} UNION #{queries[1].to_sql}) as stocks")
-
-    scope
+    queries = super
+    Stock.from("(#{queries[0].to_sql} UNION #{queries[1].to_sql}) as stocks")
   end
   
-  def departure_country(scope)
-    shipping_region = ActiveRecord::Base.connection.quote(search[:shipping_region])
-
-    scope = scope.order("(delivery_times ->> #{shipping_region})::Integer ASC").first
-     scope
-  end
   
   def find_common_suppliers(scope)
-    suppliers = scope.select(<<~SQL.squish
+    scope.select(<<~SQL.squish
       *,
       dense_rank() OVER (
         PARTITION BY stocks.product_name 
@@ -44,10 +40,6 @@ class SearchService < ApplicationService
     SQL
   ).order(number_items: :desc)
    .first
-    
-    # binding.pry
-    # ap nn.to_sql
-    scope
   end
 
 end

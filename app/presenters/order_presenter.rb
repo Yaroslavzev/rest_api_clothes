@@ -8,14 +8,18 @@ class OrderPresenter
   attr_reader :target
 
   def call
-    binding.pry
     {
-      delivery_date: Date.today + target.delivery_times["us"] + 2,
-      # shipments: items,
+      delivery_date: Date.today + 2,
+      shipments: items,
     }
   end
   
   def items
-    
+    target.map do |object|
+      { supplier: object[:supplier],
+        delivery_date: object[:delivery_times]["us"],
+        count: object[:in_stock]
+      }
+    end    
   end
 end
