@@ -4,41 +4,44 @@ class MultiSearchService < BaseSearchService
   def call
     items_by_one = Stock.yield_self(&method(:suppliers))
                         .yield_self(&method(:find_common_suppliers))
-
+                        # .yield_self(&method(:count_items))
+                        #.map{ |i| results(i) } # todo
+    # binding.pry
     items_by_one = results(items_by_one)
-
+    # binding.pry
     items_by_many = items.map do |order|
+      # binding.pry
       SingleSearchService.call([order], shipping_region)
     end
-
-    date = max_delivery_date(items_by_many, items_by_one)
-
-    return items_by_one if date[:delivery_date] <= date[:max_delivery_date]
-
+    # binding.pry
+    return [items_by_one] if items_by_one.first[:delivery_date] <= items_by_many.flatten.max_by{|k| k[:delivery_date] } [:delivery_date]
     items_by_many
   end
 
   private
 
-  def max_delivery_date(items_by_many, items_by_one)
-    items_by_many.each_with_object(delivery_date: items_by_one[:delivery_date])  do |k, hash|
-      hash[:max_delivery_date] = k[:delivery_date] if hash[:delivery_date] <= k[:delivery_date]
-    end
-  end
-
   def suppliers(scope)
     queries = super
+    # binding.pry
     Stock.from("(#{queries[0].to_sql} UNION #{queries[1].to_sql}) as stocks")
   end
 
   def find_common_suppliers(scope)
-    scope.select(<<~SQL.squish
+    # binding.pry
+    scope = scope.select(<<~SQL.squish
       *,
       dense_rank() OVER (
-        PARTITION BY stocks.product_name 
+        PARTITION BY stocks.product_name
         ORDER BY stocks.supplier) AS number_items
     SQL
                 ).order(number_items: :desc)
-         .first
+
+    region = ActiveRecord::Base.connection.quote(shipping_region)
+
+
+    scope = scope.order("(delivery_times ->> #{region})::Integer DESC")
+    # binding.pry
+    # TODO
+    [scope[0]]
   end
 end
