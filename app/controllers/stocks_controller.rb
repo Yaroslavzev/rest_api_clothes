@@ -20,20 +20,20 @@ class StocksController < ApplicationController
   #   binding.pry
   #   render json: @stock
   # end
-  # 
+  #
   # #
   # # POST /stocks
   # def create
   #   binding.pry
   #   @stock = Stock.new(stock_params)
-  # 
+  #
   #   if @stock.save
   #     render json: @stock, status: :created, location: @stock
   #   else
   #     render json: @stock.errors, status: :unprocessable_entity
   #   end
   # end
-  # 
+  #
   # # PATCH/PUT /stocks/1
   # def update
   #   binding.pry
@@ -43,7 +43,7 @@ class StocksController < ApplicationController
   #     render json: @stock.errors, status: :unprocessable_entity
   #   end
   # end
-  # 
+  #
   # # DELETE /stocks/1
   # def destroy
   #   @stock.destroy

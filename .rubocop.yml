@@ -6,7 +6,15 @@ Layout/LineLength:
 Style/Documentation: 
   Enabled: false
 
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
 AllCops:
   Exclude:
     - 'bin/bundle'
-  
+
+Metrics/BlockLength:
+  Exclude:
+    - 'Rakefile'
+    - '**/*.rake'
+    - 'spec/**/*.rb'

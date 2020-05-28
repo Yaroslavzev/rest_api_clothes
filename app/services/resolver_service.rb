@@ -2,6 +2,7 @@
 
 class ResolverService < ApplicationService
   attr_reader :search
+
   def initialize(search)
     @search = search
   end

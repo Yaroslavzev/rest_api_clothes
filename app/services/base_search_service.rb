@@ -13,7 +13,7 @@ class BaseSearchService < ApplicationService
     ee = items.map do |items|
       # binding.pry
       scope.where(product_name: items[:product_name])
-           # .where(':value <= in_stock', value: items[:value])
+      # .where(':value <= in_stock', value: items[:value])
     end
     # binding.pry
     ee
@@ -33,5 +33,4 @@ class BaseSearchService < ApplicationService
       end
     end
   end
-
 end
