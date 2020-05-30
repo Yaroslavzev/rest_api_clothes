@@ -2,14 +2,20 @@
 
 class SingleSearchService < BaseSearchService
   def call
-    results = Stock.yield_self(&method(:suppliers))
-                   .yield_self(&method(:departure_country))
-                   .map { |i| results(i) } # todo
+    item_by_supplier = items_by_one
 
-    select_suppliers(results)[0]
+    select_suppliers(item_by_supplier)[0]
   end
 
   private
+
+  def items_by_one
+    Stock.yield_self(&method(:suppliers))
+         .yield_self(&method(:departure_country))
+         .map { |i| results(i) } # todo
+         # .map{ |i| results(i) } # todo
+         # change inteface in find_common_suppliers
+  end
 
   def departure_country(scope)
     region = ActiveRecord::Base.connection.quote(shipping_region)
@@ -19,23 +25,7 @@ class SingleSearchService < BaseSearchService
     end
   end
 
-  def select_suppliers(results)
-    results.map do |raw|
-      raw.each_with_object([{ ordered_value: raw[0][:ordered_value] }]) do |object, array|
-        tmp_hash = tmp_hash(object)
 
-        tmp_hash[:value] = if (array.first[:ordered_value] - object[:in_stock]).positive?
-                             object[:in_stock]
-                           else
-                             array.first[:ordered_value]
-                           end
-        array.first[:ordered_value] = array.first[:ordered_value] - object[:in_stock]
-        array << tmp_hash
-        # TODO: #drop
-        break array.drop(1) if array.first[:ordered_value] <= 0
-      end
-    end
-  end
 
   def tmp_hash(object)
     {

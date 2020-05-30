@@ -21,7 +21,7 @@ class BaseSearchService < ApplicationService
 
   def results(results)
     # binding.pry
-    results.map do |raw|
+    ee = results.map do |raw|
       raw.attributes.symbolize_keys.each_with_object({}) do |(k, v), hash|
         if v.is_a?(Hash)
           # TODO: remove
@@ -30,6 +30,26 @@ class BaseSearchService < ApplicationService
         else
           hash[k] = v
         end
+      end
+    end
+    binding.pry
+    ee
+  end
+
+  def select_suppliers(results)
+    results.map do |raw|
+      raw.each_with_object([{ ordered_value: raw[0][:ordered_value] }]) do |object, array|
+        tmp_hash = tmp_hash(object)
+
+        tmp_hash[:value] = if (array.first[:ordered_value] - object[:in_stock]).positive?
+                             object[:in_stock]
+                           else
+                             array.first[:ordered_value]
+                           end
+        array.first[:ordered_value] = array.first[:ordered_value] - object[:in_stock]
+        array << tmp_hash
+        # TODO: #drop
+        break array.drop(1) if array.first[:ordered_value] <= 0
       end
     end
   end
