@@ -8,20 +8,27 @@ class BaseSearchService < ApplicationService
     @shipping_region = shipping_region
   end
 
-  def suppliers(scope)
-    # binding.pry
-    ee = items.map do |items|
-      # binding.pry
-      scope.where(product_name: items[:product_name])
-      # .where(':value <= in_stock', value: items[:value])
-    end
-    # binding.pry
-    ee
+  def call
+    # Todo cheack
+    raise NotImplementedError
   end
 
-  def results(results)
-    # binding.pry
-    ee = results.map do |raw|
+  private
+
+   def items_by_one_supplier
+     Stock.yield_self(&method(:suppliers))
+   end
+
+  def suppliers(scope)
+    unioned_queries = items.map do |items|
+      scope.where(product_name: items[:product_name])
+    end.map(&:to_sql).join(" UNION ")
+
+    [Stock.from("(#{unioned_queries}) as stocks")]
+  end
+
+  def beatify(results)
+    results.map do |raw| # use pluck?
       raw.attributes.symbolize_keys.each_with_object({}) do |(k, v), hash|
         if v.is_a?(Hash)
           # TODO: remove
@@ -32,8 +39,6 @@ class BaseSearchService < ApplicationService
         end
       end
     end
-    binding.pry
-    ee
   end
 
   def select_suppliers(results)
@@ -52,5 +57,18 @@ class BaseSearchService < ApplicationService
         break array.drop(1) if array.first[:ordered_value] <= 0
       end
     end
+  end
+
+  def tmp_hash(object)
+    {
+      id: object[:id],
+      product_name: object[:product_name],
+      supplier: object[:supplier],
+      delivery_date: object[:delivery_date]
+    }
+  end
+
+  def region
+    ActiveRecord::Base.connection.quote(shipping_region)
   end
 end

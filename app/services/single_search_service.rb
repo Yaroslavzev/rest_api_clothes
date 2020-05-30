@@ -2,37 +2,21 @@
 
 class SingleSearchService < BaseSearchService
   def call
-    item_by_supplier = items_by_one
-
+    item_by_supplier = items_by_one_supplier
     select_suppliers(item_by_supplier)[0]
   end
 
   private
 
-  def items_by_one
-    Stock.yield_self(&method(:suppliers))
+  def items_by_one_supplier
+    super
          .yield_self(&method(:departure_country))
-         .map { |i| results(i) } # todo
-         # .map{ |i| results(i) } # todo
-         # change inteface in find_common_suppliers
+         .map { |i| beatify(i) }
   end
-
-  def departure_country(scope)
-    region = ActiveRecord::Base.connection.quote(shipping_region)
-
-    scope.map do |query|
+  
+  def departure_country(scopes)
+    scopes.map do |query|
       query.order("(delivery_times ->> #{region})::Integer ASC")
     end
-  end
-
-
-
-  def tmp_hash(object)
-    {
-      id: object[:id],
-      product_name: object[:product_name],
-      supplier: object[:supplier],
-      delivery_date: object[:delivery_date]
-    }
   end
 end
