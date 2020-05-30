@@ -33,4 +33,15 @@ describe SingleSearchService do
       expect(results.count).to eq 2
     end
   end
+
+  # TODO: add test
+  context "when three shipments with 2 and 7 items from supplier A and B" do
+    let(:value) { "9" }
+
+    it "returns the smallest supplier delivery time" do
+      # results = SingleSearchService.call(order[:items], order[:shipping_region])
+      # TODO: add Date shipping
+      # expect(results.count).to eq 2
+    end
+  end
 end

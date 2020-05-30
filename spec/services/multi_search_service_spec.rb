@@ -63,7 +63,7 @@ describe MultiSearchService do
   #   let(:shipping_region) { "us" }
   #
   #   it 'returns common supplier' do
-  #     # result = MultiSearchService.call(order[:items], order[:shipping_region])
+  #     result = MultiSearchService.call(order[:items], order[:shipping_region])
   #     # binding.pry
   #     # expect(result.flatten.count).to be 2
   #   end

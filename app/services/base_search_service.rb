@@ -15,9 +15,9 @@ class BaseSearchService < ApplicationService
 
   private
 
-   def items_by_one_supplier
-     Stock.yield_self(&method(:suppliers))
-   end
+  def items_by_one_supplier
+    Stock.yield_self(&method(:suppliers))
+  end
 
   def suppliers(scope)
     unioned_queries = items.map do |items|
@@ -45,7 +45,6 @@ class BaseSearchService < ApplicationService
     results.map do |raw|
       raw.each_with_object([{ ordered_value: raw[0][:ordered_value] }]) do |object, array|
         tmp_hash = tmp_hash(object)
-
         tmp_hash[:value] = if (array.first[:ordered_value] - object[:in_stock]).positive?
                              object[:in_stock]
                            else
@@ -53,7 +52,6 @@ class BaseSearchService < ApplicationService
                            end
         array.first[:ordered_value] = array.first[:ordered_value] - object[:in_stock]
         array << tmp_hash
-        # TODO: #drop
         break array.drop(1) if array.first[:ordered_value] <= 0
       end
     end
