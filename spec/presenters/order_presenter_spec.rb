@@ -3,31 +3,29 @@
 describe OrderPresenter do
   let(:order) do
     {
-      items: [
-        {
-          product_name: "pink_t-shirt",
-          value: 2
-        },
-        {
-          product_name: "black_mug",
-          value: 2
-        }
-      ],
+      items: [{ product_name: "pink_t-shirt",
+                value: 2 },
+              { product_name: "black_mug",
+                value: 2 }],
       shipping_region: "eu"
     }
   end
 
   context "when having a t-shirt and hoodie in the basket" do
-    it "returns common supplier" do
-      qwerty = MultiSearchService.call(order[:items], order[:shipping_region])
-      hash = { id: 6, product_name: "pink_t-shirt", supplier: "Best Tshirts", delivery_date: Date.today, value: 2 }
-      # binding.pry
-      qwerty = qwerty.flatten << hash
-      # binding.pry
+    let(:unpresented_data) { MultiSearchService.call(order[:items], order[:shipping_region]) }
+    let(:presented_data) { OrderPresenter.new(unpresented_data.flatten).call }
+    let(:expected_data) do
+      { delivery_date: "2020-06-04",
+        shipments: [{ supplier: "Best Tshirts",
+                      delivery_date: (Date.today + 2 + 2).to_s,
+                      items: [{ title: "pink_t-shirt", count: 2 }] },
+                    { supplier: "Shirts Unlimited",
+                      delivery_date: (Date.today + 2 + 1).to_s,
+                      items: [{ title: "black_mug", count: 2 }] }] }
+    end
 
-      # TODO: remove flatten
-      OrderPresenter.new(qwerty).call
-      # expect(SearchService.call(booking).first.delivery_times["us"]).to be 3
+    it "returns common supplier" do
+      expect(presented_data).to include expected_data
     end
   end
 end

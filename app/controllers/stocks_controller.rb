@@ -4,7 +4,7 @@ class StocksController < ApplicationController
   def index
     @stocks = ResolverService.call(stock_params)
 
-    render json: OrderPresenter.new(@stocks).call
+    render json: OrderPresenter.new(@stocks.flatten).call
   end
 
   private
