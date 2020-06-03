@@ -12,10 +12,10 @@ describe OrderPresenter do
   end
 
   context "when having a t-shirt and hoodie in the basket" do
-    let(:unpresented_data) { MultiSearchService.call(order[:items], order[:shipping_region]) }
+    let(:unpresented_data) { SearchService.call(order[:items], order[:shipping_region]) }
     let(:presented_data) { OrderPresenter.new(unpresented_data.flatten).call }
     let(:expected_data) do
-      { delivery_date: "2020-06-04",
+      { delivery_date: (Date.today + 2 + 2).to_s,
         shipments: [{ supplier: "Best Tshirts",
                       delivery_date: (Date.today + 2 + 2).to_s,
                       items: [{ title: "pink_t-shirt", count: 2 }] },

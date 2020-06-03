@@ -1,23 +1,38 @@
 # frozen_string_literal: true
 
-class BaseSearchService < ApplicationService
+class SearchService < ApplicationService
   attr_reader :items, :shipping_region
+  attr_accessor :items_by_one, :items_by_many
 
   def initialize(items, shipping_region)
-    @items           = items.each{ |hash| hash[:value] = hash[:value].to_i}
-    @shipping_region = shipping_region
+    @items                 = items.each { |hash| hash[:value] = hash[:value].to_i }
+    @shipping_region       = shipping_region
   end
 
   def call
-    raise NotImplementedError
+    find_items_by_one_supplier
+    find_items_by_many_supplier
+
+    return items_by_one if send_by_one_supplier?
+
+    items_by_many
   end
 
   private
 
-  def items_by_one_supplier
-    Stock.yield_self(&method(:suppliers))
-         .yield_self(&method(:find_common_suppliers))
-         .map { |i| beatify(i) }
+  def find_items_by_one_supplier
+    self.items_by_one = Stock.yield_self(&method(:suppliers))
+                             .yield_self(&method(:find_common_suppliers))
+                             .map { |i| beatify(i) }
+                             .yield_self(&method(:select_suppliers))
+  end
+
+  def find_items_by_many_supplier
+    return if items.count <= 1
+
+    self.items_by_many = items.map do |order|
+      SearchService.call([order], shipping_region)
+    end
   end
 
   def suppliers(scope)
@@ -84,5 +99,15 @@ class BaseSearchService < ApplicationService
 
   def region
     ActiveRecord::Base.connection.quote(shipping_region)
+  end
+
+  def send_by_one_supplier?
+    return true if items_by_many.is_a?(NilClass) || items_by_many.all?(&:nil?)
+
+    biggest_delivery_date(items_by_one) <= biggest_delivery_date(items_by_many)
+  end
+
+  def biggest_delivery_date(array)
+    array.flatten.max_by { |k| k[:delivery_date] }[:delivery_date]
   end
 end

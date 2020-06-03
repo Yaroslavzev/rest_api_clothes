@@ -19,12 +19,7 @@ RSpec.describe "/stocks" do
     it "returns a successful response" do
       get stocks_path, params
 
-      expect(response).to be_successful      
+      expect(response).to be_successful
     end
   end
 end
-
- 
-  
-        
-        

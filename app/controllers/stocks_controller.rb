@@ -2,7 +2,7 @@
 
 class StocksController < ApplicationController
   def index
-    @stocks = ResolverService.call(stock_params)
+    @stocks = SearchService.call(stock_params[:items], stock_params[:shipping_region])
 
     render json: OrderPresenter.new(@stocks.flatten).call
   end
