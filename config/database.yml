@@ -22,6 +22,7 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   url: postgresql://postgres:postgres@localhost:5433
 
+
 development:
   <<: *default
   database: rest_api_clothes_development

@@ -52,7 +52,7 @@ class SearchService < ApplicationService
           ORDER BY stocks.product_name) AS number_items
       SQL
                           ).order(number_items: :desc)
-      query.order("(delivery_times ->> #{region})::Integer ASC")
+      query.order(Arel.sql("(delivery_times ->> #{region})::Integer ASC"))
     end
   end
 
