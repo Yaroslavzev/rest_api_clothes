@@ -16,8 +16,8 @@ module API
 
           contract_params = contract_params[:order]
 
-          result = SearchService.call(contract_params[:items], contract_params[:shipping_region])
-
+          result = SearchService.new.call(contract_params[:items], contract_params[:shipping_region])
+          binding.pry
           result = OrderPresenter.new(result.flatten).call
           Success(result)
         end

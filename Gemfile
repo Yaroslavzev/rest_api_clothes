@@ -16,6 +16,7 @@ gem "dry-validation", ">= 1.6"
 gem "dry-system"
 gem "dry-monads"
 
+gem 'surrealist'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.7'
 # Use Active Model has_secure_password
