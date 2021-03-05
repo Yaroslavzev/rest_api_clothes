@@ -1,25 +1,49 @@
-# frozen_string_literal: true
+require 'swagger_helper'
 
-require "spec_helper"
+RSpec.describe 'stocks', type: :request do
 
-RSpec.describe "/stocks" do
-  describe "GET /index" do
-    let(:params) do
-      { params: { order: {
-        items: [
-          {
-            product_name: "pink_t-shirt",
-            value: 2
+  path '/in_stocks' do
+
+    post('list stocks') do
+      tags 'Stock'
+      produces 'application/json'
+      consumes 'application/json'
+
+      parameter name: :order, in: :body, schema: {
+          type: :object,
+          required: true,
+          properties: {
+              order: {
+                  items: {
+                      type: Array,
+                      properties: {
+                          product_name: { type: :string },
+                          value: { type: :int }
+                      }
+                  },
+                  shipping_region: { type: :string }
           }
-        ],
-        shipping_region: "us"
-      } } }
-    end
+          # required: [ 'items', 'product_name', 'value', ]
+      },
+          required: [ 'order' ]
+      }
 
-    it "returns a successful response" do
-      get stocks_path, params
 
-      expect(response).to be_successful
+
+      response(200, 'successful') do
+        let(:order) { { order: {
+            items: [
+                {
+                    product_name: "pink_t-shirt",
+                    value: 2
+                }
+            ],
+            shipping_region: "us"
+        } } }
+
+        run_test!
+      end
     end
   end
 end
+
