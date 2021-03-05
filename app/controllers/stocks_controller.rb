@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class StocksController < ApplicationController
-  def index
+
+  def in_stocks
     @stocks = SearchService.call(stock_params[:items], stock_params[:shipping_region])
 
     render json: OrderPresenter.new(@stocks.flatten).call
