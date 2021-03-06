@@ -1,9 +1,7 @@
-
 # frozen_string_literal: true
 
 class FindItemsByManySupplier
   def call(items, shipping_region)
-
     results = items.map do |item|
       result = find_items_by_one_supplier(item, shipping_region)
 
@@ -26,13 +24,13 @@ class FindItemsByManySupplier
 
     # TODO: revome selected fields
     Stock.where(product_name: item[:product_name])
-        .select(<<~SQL.squish
-                    *,
-                    (stocks.in_stock - #{item[:value]}) as diff,
-                    (#{item[:value]}) as ordered_value,
-                    ((stocks.delivery_times ->> #{region})::Integer) as delivery_date
-    SQL
-    )
+         .select(<<~SQL.squish
+           *,
+           (stocks.in_stock - #{item[:value]}) as diff,
+           (#{item[:value]}) as ordered_value,
+           ((stocks.delivery_times ->> #{region})::Integer) as delivery_date
+         SQL
+                )
   end
 
   def find_common_suppliers(scope, shipping_region)
@@ -44,13 +42,15 @@ class FindItemsByManySupplier
     scope
   end
 
-  def select_suppliers(results, item) # TODO: move to concern
+  # TODO: move to concern
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+  def select_suppliers(results, item)
     result = results
     # selected_suppliers = OpenStruct.new( supplier: )
     selected_suppliers = []
 
     result.each_with_object({ ordered_value: item[:value] }) do |object, ordered_values|
-
       ordered_values[:ordered_value] = ordered_values[:ordered_value] - object[:in_stock]
 
       value = ordered_values[:ordered_value] >= 0 ? object[:in_stock] : ordered_values[:ordered_value] + object[:in_stock]
@@ -58,13 +58,12 @@ class FindItemsByManySupplier
       kek = { product_name: object.product_name,
               supplier: object.supplier,
               delivery_time: object.delivery_time,
-              ordered_values: value
-
-      }
+              ordered_values: value }
       selected_suppliers << kek
 
       break selected_suppliers if ordered_values[:ordered_value] <= 0 # TODO: add not enougth in_stock and remove last
     end
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 end
-

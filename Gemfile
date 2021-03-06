@@ -12,11 +12,11 @@ gem "pg", ">= 0.18", "< 2.0"
 # Use Puma as the app server
 gem "puma", "~> 4.1"
 
-gem "dry-validation", ">= 1.6"
-gem "dry-system"
 gem "dry-monads"
+gem "dry-system"
+gem "dry-validation", ">= 1.6"
 
-gem 'surrealist'
+# gem 'surrealist'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.7'
 # Use Active Model has_secure_password
@@ -44,4 +44,9 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem "spring"
   gem "spring-watcher-listen", "~> 2.0.0"
+end
+
+group :test do
+  gem "simplecov", "~> 0.18", require: false
+  gem "simplecov-lcov", require: false
 end

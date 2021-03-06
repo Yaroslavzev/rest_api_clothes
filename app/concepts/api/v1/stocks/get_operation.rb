@@ -1,6 +1,7 @@
 # frozen_string_literal: true
-require 'dry/monads'
-require 'dry/monads/do'
+
+require "dry/monads"
+require "dry/monads/do"
 
 module API
   module V1
@@ -17,7 +18,7 @@ module API
           contract_params = contract_params[:order]
 
           result = SearchService.new.call(contract_params[:items], contract_params[:shipping_region])
-          binding.pry
+
           result = OrderPresenter.new(result.flatten).call
           Success(result)
         end
@@ -31,7 +32,6 @@ module API
 
           Failure(result.errors.to_h)
         end
-
       end
     end
   end

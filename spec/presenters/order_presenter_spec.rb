@@ -12,7 +12,7 @@ describe OrderPresenter do
   end
 
   context "when having a t-shirt and hoodie in the basket" do
-    let(:unpresented_data) { SearchService.new().call(order[:items], order[:shipping_region]) }
+    let(:unpresented_data) { SearchService.new.call(order[:items], order[:shipping_region]) }
     let(:presented_data) { OrderPresenter.new(unpresented_data.flatten).call }
     let(:expected_data) do
       { delivery_date: (Date.today + 2 + 2).to_s,

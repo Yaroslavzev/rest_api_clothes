@@ -37,3 +37,6 @@ curl -X GET -d "order[items][][product_name]=pink_t-shirt" -d "order[items][][va
 * add incoming data validation and error processing;
 * use docker.
 
+
+##
+CI with liter, rspec and undercover

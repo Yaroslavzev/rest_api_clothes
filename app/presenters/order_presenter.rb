@@ -11,7 +11,6 @@ class OrderPresenter
     # TODO: thing about serializer
     # kek = ShipmentSerializer.new(target).build_schema
 
-
     {
       delivery_date: biggest_delivery_date(target),
       shipments: suppliers

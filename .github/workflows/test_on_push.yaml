@@ -1,0 +1,38 @@
+name: clothes
+
+on: [push]
+
+jobs:
+  continious_integration:
+    runs-on: ubuntu-18.04
+
+    services:
+      postgres:
+        image: postgres:11.5
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7 # Not needed with a .ruby-version file
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: Rubocop
+        env:
+          RAILS_ENV: test
+        run: bundle exec rubocop
+      - name: Run test
+        env:
+          RAILS_ENV: test
+        run: |
+          bundle exec rails db:setup
+          bundle exec rspec
+      # TODO: check
+      - name: Undercover
+        env:
+          RAILS_ENV: test
+        run: |
+          gem install bundler undercover --no-doc
+          git fetch origin master:master
+          undercover --compare master
