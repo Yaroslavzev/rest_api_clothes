@@ -8,6 +8,10 @@ class OrderPresenter
   end
 
   def call
+    # TODO: thing about serializer
+    # kek = ShipmentSerializer.new(target).build_schema
+
+
     {
       delivery_date: biggest_delivery_date(target),
       shipments: suppliers
@@ -25,22 +29,12 @@ class OrderPresenter
   def items(array)
     array.map do |hash|
       { title: hash[:product_name],
-        count: hash[:value] }
+        count: hash[:ordered_values] }
     end
   end
 
   def biggest_delivery_date(array)
-    array.max_by { |k| k[:delivery_date] }[:delivery_date].to_s
+    delivery_date = Date.today + array.max_by { |k| k[:delivery_time] }[:delivery_time] + 2
+    delivery_date.to_date.strftime("%Y-%m-%d")
   end
 end
-# delivery_date: '2020-03-10',
-# shipments: [
-# {supplier: "Shirts4U", delivery_date: '2020-03-09' items: [
-# {
-# title: "tshirt",
-# count: 10
-# },
-# {
-# title: "hoodie",
-# count: 5
-# },
