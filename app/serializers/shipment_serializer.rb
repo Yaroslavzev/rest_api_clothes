@@ -30,7 +30,6 @@
 #
 # end
 
-
 # delivery_date: '2020-03-10',
 # shipments: [
 # {supplier: "Shirts4U", delivery_date: '2020-03-09' items: [

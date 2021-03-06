@@ -12,9 +12,9 @@ gem "pg", ">= 0.18", "< 2.0"
 # Use Puma as the app server
 gem "puma", "~> 4.1"
 
-gem "dry-validation", ">= 1.6"
-gem "dry-system"
 gem "dry-monads"
+gem "dry-system"
+gem "dry-validation", ">= 1.6"
 
 # gem 'surrealist'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -47,6 +47,6 @@ group :development do
 end
 
 group :test do
-  gem 'simplecov', '~> 0.18', require: false
-  gem 'simplecov-lcov', require: false
+  gem "simplecov", "~> 0.18", require: false
+  gem "simplecov-lcov", require: false
 end

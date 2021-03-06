@@ -1,6 +1,7 @@
 # frozen_string_literal: true
-require 'dry/monads'
-require 'dry/monads/do'
+
+require "dry/monads"
+require "dry/monads/do"
 
 module API
   module V1
@@ -31,7 +32,6 @@ module API
 
           Failure(result.errors.to_h)
         end
-
       end
     end
   end
