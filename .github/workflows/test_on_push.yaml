@@ -1,6 +1,6 @@
 name: clothes
 
-on: [pull_request]
+on: [push]
 
 jobs:
   continious_integration:
@@ -28,10 +28,11 @@ jobs:
         run: |
           bundle exec rails db:setup
           bundle exec rspec
+      # TODO: check
       - name: Undercover
         env:
           RAILS_ENV: test
         run: |
           gem install bundler undercover --no-doc
-          git fetch
-          undercover --compare ${GITHUB_REF##*/}
+          git fetch origin master:master
+          undercover --compare master
