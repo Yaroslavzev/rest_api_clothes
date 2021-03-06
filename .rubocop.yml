@@ -18,3 +18,7 @@ Metrics/BlockLength:
     - 'Rakefile'
     - '**/*.rake'
     - 'spec/**/*.rb'
+
+inherit_mode:
+  merge:
+    - Exclude
