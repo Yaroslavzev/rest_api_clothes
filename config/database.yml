@@ -2,32 +2,16 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  # For details on connection pooling, see Rails configuration guide
-  # https://guides.rubyonrails.org/configuring.html#database-pooling
+  username: <%= ENV['DATABASE_USERNAME'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+  host: <%= ENV["DATABASE_HOSTNAME"] %>
+  port: <%= ENV["DATABASE_PORT"] %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-
 
 development:
   <<: *default
   database: rest_api_clothes_development
-  url: postgresql://postgres:postgres@localhost:5433
 
 test:
   <<: *default
   database: rest_api_clothes_test
-#  url: postgresql://postgres:postgres@localhost:5433
-  host: localhost
-  username: postgres
-# You can use this database configuration with:
-#
-#   production:
-#     url: <%= ENV['DATABASE_URL'] %>
-#
-# production:
-#   <<: *default
-#   database: rest_api_clothes_production
-#   username: rest_api_clothes
-#   password: <%= ENV['REST_API_CLOTHES_DATABASE_PASSWORD'] %>
-#    PGHOST: localhost
-#    PGUSER: postgres
-#    RAILS_ENV: test

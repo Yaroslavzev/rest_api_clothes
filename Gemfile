@@ -34,6 +34,7 @@ gem "rswag"
 
 group :development, :test do
   gem "awesome_print", require: "ap"
+  gem "dotenv-rails"
   gem "pry"
   gem "rspec-rails"
   gem "rubocop", require: false
