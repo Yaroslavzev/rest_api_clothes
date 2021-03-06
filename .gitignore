@@ -28,3 +28,7 @@
 
 .idea
 coverage
+
+# local enviroments
+.env.*
+!.env.*.sample
