@@ -1,23 +1,29 @@
 # frozen_string_literal: true
 
 class OrderPresenter
-  attr_reader :target
+  include Dry::Monads[:result, :do]
+  include Dry::Monads::Do.for(:call)
+  # attr_reader :target
 
-  def initialize(target)
-    @target = target
-  end
+  # def initialize(target)
+  #   @target = target
+  # end
 
-  def call
+  def call(target:)
     # TODO: thing about serializer
     # kek = ShipmentSerializer.new(target).build_schema
 
-    {
+    result = {
       delivery_date: biggest_delivery_date(target),
-      shipments: suppliers
+      shipments: suppliers(target)
     }
+
+    Success(result)
   end
 
-  def suppliers
+  private
+
+  def suppliers(target)
     target.group_by { |h| h[:supplier] }.map do |key, array|
       { supplier: key,
         delivery_date: biggest_delivery_date(array),

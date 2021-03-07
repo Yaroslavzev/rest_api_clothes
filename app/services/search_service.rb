@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
 class SearchService
+  include Dry::Monads[:result, :do]
+  include Dry::Monads::Do.for(:call)
+
   def call(items, shipping_region)
     FindItemsByOneSupplier.new.call(items, shipping_region) if items.count > 1
-    items_by_many = FindItemsByManySupplier.new.call(items, shipping_region)
+    items_by_many = yield FindItemsByManySupplier.new.call(items, shipping_region)
 
     # return items_by_many if send_by_one_supplier?(items_by_one, items_by_many)
-
-    items_by_many
+    # binding.pry
+    Success(items_by_many)
   end
 
   # def send_by_one_supplier?(items_by_one, items_by_many)

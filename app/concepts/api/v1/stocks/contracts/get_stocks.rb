@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+#TODO: add test
 module API
   module V1
     module Stocks
@@ -10,7 +11,7 @@ module API
               required(:shipping_region).filled(:str?)
               required(:items).array(:hash) do
                 required(:product_name).filled(:str?)
-                required(:value).filled(:integer)
+                required(:value).filled(:integer, gt?: 0)
               end
             end
           end

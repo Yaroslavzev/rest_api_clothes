@@ -40,3 +40,5 @@ curl -X GET -d "order[items][][product_name]=pink_t-shirt" -d "order[items][][va
 
 ##
 CI with liter, rspec and undercover
+value must be more that zero
+
