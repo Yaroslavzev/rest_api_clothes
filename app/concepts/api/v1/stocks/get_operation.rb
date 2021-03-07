@@ -10,16 +10,19 @@ module API
         include Dry::Monads[:result, :do]
         include Dry::Monads::Do.for(:call)
 
-        include AppImport[contract: "api.v1.stocks.contracts.get_stocks"]
+        include AppImport[contract: "api.v1.stocks.contracts.get_stocks",
+                          search_suppliers: "search_service",
+                          presenter: "order_presenter"
+                ]
 
         def call(params)
           contract_params = yield validate_data(params)
-
           contract_params = contract_params[:order]
 
-          result = SearchService.new.call(contract_params[:items], contract_params[:shipping_region])
+          result = yield search_suppliers.call(contract_params[:items], contract_params[:shipping_region])
+          # TODO: remove flatten
+          result = yield presenter.call(target: result.flatten)
 
-          result = OrderPresenter.new(result.flatten).call
           Success(result)
         end
 
@@ -30,7 +33,7 @@ module API
 
           return Success(result.to_h) if result.success?
 
-          Failure(result.errors.to_h)
+          Failure[:unprocessable_entity, result.errors.to_h]
         end
       end
     end

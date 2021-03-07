@@ -6,10 +6,10 @@ class AppContainer < Dry::System::Container
   configure do |config|
     config.root = Rails.root.join("app").to_s.freeze
     config.inflector = ActiveSupport::Inflector
-    config.auto_register = %w[concepts services]
+    config.auto_register = %w[concepts services presenters]
   end
 
-  load_paths!("concepts", "services")
+  load_paths!("concepts", "services", "presenters")
 end
 
 AppImport = AppContainer.injector

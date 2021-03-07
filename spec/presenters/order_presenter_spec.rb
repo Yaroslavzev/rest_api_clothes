@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 describe OrderPresenter do
+  subject(:result) { described_class.new.call(target: suppliers_with_staff.flatten) }
   let(:order) do
     {
       items: [{ product_name: "pink_t-shirt",
@@ -12,8 +13,8 @@ describe OrderPresenter do
   end
 
   context "when having a t-shirt and hoodie in the basket" do
-    let(:unpresented_data) { SearchService.new.call(order[:items], order[:shipping_region]) }
-    let(:presented_data) { OrderPresenter.new(unpresented_data.flatten).call }
+    # TODO: use instance_double
+    let(:suppliers_with_staff) { AppContainer["search_service"].call(order[:items], order[:shipping_region]).value! }
     let(:expected_data) do
       { delivery_date: (Date.today + 2 + 2).to_s,
         shipments: [{ supplier: "Best Tshirts",
@@ -24,8 +25,9 @@ describe OrderPresenter do
                       items: [{ title: "black_mug", count: 2 }] }] }
     end
 
-    it "returns common supplier" do
-      expect(presented_data).to include expected_data
+    it "returns common supplier", aggregate_failures: true do
+      expect(result).to be_success
+      expect(result.value!).to include expected_data
     end
   end
 end

@@ -22,17 +22,53 @@ RSpec.describe "stocks", type: :request do
             },
             shipping_region: { type: :string }
           }
-          # required: [ 'items', 'product_name', 'value', ]
         },
-        required: ["order"]
+        required: true
       }
 
       response(200, "successful") do
+        schema type: :object,
+               properties: {
+                 delivery_date: { type: :string },
+                 shipments: {
+                   type: Array,
+                   properties: {
+                     supplier: { type: :string },
+                     delivery_date: { type: :string },
+                     items: {
+                       type: Array,
+                       properties: {
+                         title: { type: :string },
+                         count: { type: :int }
+                       },
+                       required: %w[title count]
+                     }
+                   },
+                   required: %w[supplier delivery_date items]
+                 }
+               },
+               required: %w[delivery_date shipments]
+
         let(:order) do
           { order: {
             items: [
               {
                 product_name: "pink_t-shirt",
+                value: 2
+              }
+            ],
+            shipping_region: "us"
+          } }
+        end
+
+        run_test!
+      end
+
+      response(422, "unprocessable entity") do
+        let(:order) do
+          { order: {
+            items: [
+              {
                 value: 2
               }
             ],

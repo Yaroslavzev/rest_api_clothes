@@ -1,5 +1,6 @@
 name: clothes
 
+# TODO: exclude master from actions
 on: [push]
 
 jobs:
