@@ -20,7 +20,7 @@ module API
           contract_params = contract_params[:order]
 
           result = yield search_suppliers.call(contract_params[:items], contract_params[:shipping_region])
-          #TODO: remove flatten
+          # TODO: remove flatten
           result = yield presenter.call(target: result.flatten)
 
           Success(result)

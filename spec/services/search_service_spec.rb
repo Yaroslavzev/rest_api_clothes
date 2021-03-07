@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SearchService, aggregate_failures: true  do
+describe SearchService, aggregate_failures: true do
   subject(:results) { described_class.new.call(order[:items], order[:shipping_region]) }
   context "when one item in order" do
     let(:order) do
@@ -52,7 +52,7 @@ describe SearchService, aggregate_failures: true  do
 
       it "returns failure error" do
         expect(results).to be_failure
-        expect(results.failure). to eq [:doesnt_have_enough_in_stock, { product_name: order.dig(:items, 0, :product_name)}]
+        expect(results.failure). to eq [:doesnt_have_enough_in_stock, { product_name: order.dig(:items, 0, :product_name) }]
       end
     end
 
@@ -62,7 +62,7 @@ describe SearchService, aggregate_failures: true  do
 
       it "returns failure error" do
         expect(results).to be_failure
-        expect(results.failure). to eq [:not_found, { product_name: order.dig(:items, 0, :product_name)}]
+        expect(results.failure). to eq [:not_found, { product_name: order.dig(:items, 0, :product_name) }]
       end
     end
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#TODO: add test
+# TODO: add test
 module API
   module V1
     module Stocks

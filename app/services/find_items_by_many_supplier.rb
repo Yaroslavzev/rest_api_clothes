@@ -23,24 +23,21 @@ class FindItemsByManySupplier
     return Failure[:not_found, product_name: item[:product_name]] unless scope.exists?
 
     scope = scope.select(<<~SQL.squish
-      *,
-      (delivery_times ->> #{region})::Integer AS delivery_time,
+      *, (delivery_times ->> #{region})::Integer AS delivery_time,
       row_number() OVER (
         PARTITION BY stocks.product_name ORDER BY (delivery_times ->> #{region})::Integer) AS supplier_number
     SQL
-    )
-
+                        )
     Success(scope)
   end
 
   # TODO: move to concern
   # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/MethodLength
   def select_suppliers(results, item)
     # selected_suppliers = OpenStruct.new( supplier: )
     selected_suppliers = []
 
-    results.each_with_object({ ordered_value: item[:value], supplier_count: results.size}) do |object, ordered_values|
+    results.each_with_object({ ordered_value: item[:value], supplier_count: results.size }) do |object, ordered_values|
       ordered_values[:ordered_value] = ordered_values[:ordered_value] - object[:in_stock]
 
       value = ordered_values[:ordered_value] >= 0 ? object[:in_stock] : ordered_values[:ordered_value] + object[:in_stock]
@@ -51,7 +48,6 @@ class FindItemsByManySupplier
     end
   end
   # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
 
   # TODO: add serializer
   def serialised_hash(object, value)
@@ -68,6 +64,6 @@ class FindItemsByManySupplier
   end
 
   def not_enough_in_stock?(object, ordered_values)
-    ordered_values[:supplier_count] == object.supplier_number && ordered_values[:ordered_value] > 0
+    ordered_values[:supplier_count] == object.supplier_number && ordered_values[:ordered_value].positive?
   end
 end

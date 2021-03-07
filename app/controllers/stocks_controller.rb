@@ -5,9 +5,11 @@ class StocksController < ApplicationController
 
   include AppImport[get_operation: "api.v1.stocks.get_operation"]
 
+  # rubocop:disable Metrics/MethodLength
   def in_stocks
     result = get_operation.call(params.to_unsafe_h)
 
+    # TODO: move to consern
     case result
     in Success(values)
       render json: values
@@ -28,4 +30,5 @@ class StocksController < ApplicationController
       render :json, status: :too_many_requests
     end
   end
+  # rubocop:enable Metrics/MethodLength
 end
