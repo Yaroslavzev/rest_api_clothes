@@ -2,8 +2,8 @@
 
 require "swagger_helper"
 
-RSpec.describe "stocks", type: :request do
-  path "/in_stocks" do
+RSpec.describe API::V1::StocksController, type: :request do
+  path "/api/v1/in_stocks" do
     post("list stocks") do
       tags "Stock"
       produces "application/json"
