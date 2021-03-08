@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe OrderPresenter do
+describe OrderSerializer do
   subject(:result) { described_class.new.call(target: suppliers_with_staff.flatten) }
   let(:order) do
     {

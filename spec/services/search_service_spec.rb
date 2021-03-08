@@ -83,13 +83,13 @@ describe SearchService, aggregate_failures: true do
         let(:shipping_region) { "us" }
         let(:value) { 2 }
 
-        # it "returns common supplier" do
-        #   results = SearchService.new.call(order[:items], order[:shipping_region])
-        #
-        #   expect(results.flatten.count).to be 2
-        #   expect(results.flatten.first[:supplier]).to eql "Shirts4U"
-        #   expect(results.flatten.second[:supplier]).to eql "Shirts4U"
-        # end
+        it "returns common supplier" do
+          results = SearchService.new.call(order[:items], order[:shipping_region])
+
+          expect(results.flatten.count).to be 2
+          expect(results.flatten.first[:supplier]).to eql "Shirts4U"
+          expect(results.flatten.second[:supplier]).to eql "Shirts4U"
+        end
 
         # context "when one supplier doesn't have enough items in stock" do
         #   let(:value) { 6 }

@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-class OrderPresenter
+class OrderSerializer
   include Dry::Monads[:result, :do]
   include Dry::Monads::Do.for(:call)
 
+  # TODO: thing about serializer with gem
   def call(target:)
-    # TODO: thing about serializer
-    # kek = ShipmentSerializer.new(target).build_schema
-
     result = {
       delivery_date: biggest_delivery_date(target),
       shipments: suppliers(target)
