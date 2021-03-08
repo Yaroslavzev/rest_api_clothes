@@ -16,12 +16,12 @@ describe OrderPresenter do
     # TODO: use instance_double
     let(:suppliers_with_staff) { AppContainer["search_service"].call(order[:items], order[:shipping_region]).value! }
     let(:expected_data) do
-      { delivery_date: (Date.today + 2 + 2).to_s,
+      { delivery_date: (Date.today + 2).to_s,
         shipments: [{ supplier: "Best Tshirts",
-                      delivery_date: (Date.today + 2 + 2).to_s,
+                      delivery_date: (Date.today + 2).to_s,
                       items: [{ title: "pink_t-shirt", count: 2 }] },
                     { supplier: "Shirts Unlimited",
-                      delivery_date: (Date.today + 2 + 1).to_s,
+                      delivery_date: (Date.today + 1).to_s,
                       items: [{ title: "black_mug", count: 2 }] }] }
     end
 
