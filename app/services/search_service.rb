@@ -6,7 +6,6 @@ class SearchService
 
   include AppImport[items_by_many_suppliers: "find_items_by_many_supplier"]
 
-
   def call(items, shipping_region)
     FindItemsByOneSupplier.new.call(items, shipping_region) if items.count > 1
     items_by_many = yield items_by_many_suppliers.call(items, shipping_region)
