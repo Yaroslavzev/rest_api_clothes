@@ -44,7 +44,7 @@ class FindItemsByManySupplier
       selected_suppliers << serialised_hash(object, value)
 
       return Failure[:doesnt_have_enough_in_stock, product_name: object.product_name] if not_enough_in_stock?(object, ordered_values)
-      break Success(selected_suppliers) if stop_selection?(ordered_values[:ordered_value]) # TODO: add not enougth in_stock and remove last
+      break Success(selected_suppliers) if stop_selection?(ordered_values[:ordered_value])
     end
   end
   # rubocop:enable Metrics/AbcSize

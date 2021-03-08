@@ -3,11 +3,6 @@
 class OrderPresenter
   include Dry::Monads[:result, :do]
   include Dry::Monads::Do.for(:call)
-  # attr_reader :target
-
-  # def initialize(target)
-  #   @target = target
-  # end
 
   def call(target:)
     # TODO: thing about serializer
