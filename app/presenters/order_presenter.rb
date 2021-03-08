@@ -34,7 +34,7 @@ class OrderPresenter
   end
 
   def biggest_delivery_date(array)
-    delivery_date = Date.today + array.max_by { |k| k[:delivery_time] }[:delivery_time] + 2
+    delivery_date = Date.today + array.max_by { |k| k[:delivery_time] }[:delivery_time]
     delivery_date.to_date.strftime("%Y-%m-%d")
   end
 end
