@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Search
   class SelectSuppliers
     include Dry::Monads[:result, :do]
@@ -7,6 +8,8 @@ module Search
     def call(result:, item:)
       select_suppliers(result, item)
     end
+
+    private
 
     # rubocop:disable Metrics/AbcSize
     def select_suppliers(result, item)

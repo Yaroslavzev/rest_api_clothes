@@ -24,13 +24,12 @@ module Search
       return Failure[:not_found, product_name: item[:product_name]] unless scope.exists?
 
       scope = scope.select(<<~SQL.squish
-      *, (delivery_times ->> #{region})::Integer AS delivery_time,
-      row_number() OVER (
-        PARTITION BY stocks.product_name ORDER BY (delivery_times ->> #{region})::Integer) AS supplier_number
+        *, (delivery_times ->> #{region})::Integer AS delivery_time,
+        row_number() OVER (
+          PARTITION BY stocks.product_name ORDER BY (delivery_times ->> #{region})::Integer) AS supplier_number
       SQL
-      )
+                          )
       Success(scope)
     end
   end
 end
-

@@ -3,10 +3,10 @@
 class FoundedItemsSerializer < Surrealist::Serializer
   json_schema do
     {
-        product_name: String,
-        supplier: String,
-        delivery_time: Integer,
-        ordered_values: Integer
+      product_name: String,
+      supplier: String,
+      delivery_time: Integer,
+      ordered_values: Integer
     }
   end
 
@@ -25,5 +25,4 @@ class FoundedItemsSerializer < Surrealist::Serializer
   def ordered_values
     context[:value]
   end
-
 end

@@ -21,7 +21,7 @@ RSpec.describe API::V1::StocksController, type: :request do
               }
             },
             shipping_region: { type: :string }
-          },
+          }
         },
         required: %w[order items product_name value shipping_region]
       }
