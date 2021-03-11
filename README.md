@@ -64,6 +64,8 @@ edge case: split it into 3
 #### General
 Rubocop, Rspec and Undercover are used to code checking during CI.   
 Scenario 1, 2 and 4 fully implemented and covered with tests(`spec/services/search_service_spec.rb`)   
+Note about scenario 3: edge case based on comparing the maximum delivery 
+time from one supplier and the maximum delivery time from different suppliers.  
 Project database is based on CSV form(`db/seeds.rb`). Additional data were added.  
 
   
@@ -89,11 +91,16 @@ The implementation implies `post` request should be send to `api/v1/in_stocks` w
 ```
 Each field must be filled and `value` must be more than `0`.
 
+
+#### How to start
+* Download repo;
+* Add env file for test and development environment;
+* Install gems: `bundle install`;
+* Set up databases and do migrations;
+* enjoy happy checking.
+
 ## What to do
 * describe `how to start`;
-* divide database queries and sort algorithm;
-* name refactoring;
-* implement scenario 3;
 * use docker: add monitoring, nginx;
-* simplify database structure.
+* simplify database structure, add Factory and beatify rspec;
 

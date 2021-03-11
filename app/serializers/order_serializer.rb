@@ -4,7 +4,7 @@ class OrderSerializer
   include Dry::Monads[:result, :do]
   include Dry::Monads::Do.for(:call)
 
-  # TODO: thing about serializer with gem
+  # thing about serializer with any gem
   def call(target:)
     result = {
       delivery_date: biggest_delivery_date(target),

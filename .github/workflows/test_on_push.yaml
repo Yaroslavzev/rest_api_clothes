@@ -29,7 +29,6 @@ jobs:
           cp .env.test.sample .env.test
           bundle exec rails db:setup
           bundle exec rspec
-      # TODO: check
       - name: Undercover
         env:
           RAILS_ENV: test

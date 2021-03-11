@@ -86,23 +86,10 @@ describe SearchService, aggregate_failures: true do
         it "returns common supplier" do
           results = SearchService.new.call(order[:items], order[:shipping_region])
 
-          expect(results.flatten.count).to be 2
-          expect(results.flatten.first[:supplier]).to eql "Shirts4U"
-          expect(results.flatten.second[:supplier]).to eql "Shirts4U"
+          expect(results.value!.flatten.count).to be 2
+          expect(results.value!.flatten.first[:supplier]).to eql "Shirts4U"
+          expect(results.value!.flatten.second[:supplier]).to eql "Shirts4U"
         end
-
-        # context "when one supplier doesn't have enough items in stock" do
-        #   let(:value) { 6 }
-        #
-        #   it "returns two suppliers" do
-        #     results = SearchService.new.call(order[:items], order[:shipping_region])
-        #
-        #     expect(results.flatten.count).to be 3
-        #     expect(results.flatten.first[:supplier]).to eql "Shirts4U"
-        #     expect(results.flatten.second[:supplier]).to eql "Shirts4U"
-        #     expect(results.flatten.third[:supplier]).to eql "Shirts Unlimited"
-        #   end
-        # end
       end
 
       context "when delivery by several suppliers faster than by one" do

@@ -9,7 +9,6 @@ RSpec.describe API::V1::StocksController, type: :request do
       produces "application/json"
       consumes "application/json"
 
-      # TODO: add json Ref
       parameter name: :order, in: :body, schema: {
         type: :object,
         properties: {

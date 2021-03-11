@@ -4,24 +4,28 @@ class SearchService
   include Dry::Monads[:result, :do]
   include Dry::Monads::Do.for(:call)
 
-  include AppImport[items_by_many_suppliers: "find_items_by_many_supplier"]
+  include AppImport[items_by_many_suppliers: "search.find_items_by_many_supplier",
+                    find_items_by_one_supplier: "search.find_items_by_one_supplier"
+          ]
 
   def call(items, shipping_region)
-    FindItemsByOneSupplier.new.call(items, shipping_region) if items.count > 1
-    items_by_many = yield items_by_many_suppliers.call(items, shipping_region)
+    items_by_one = find_items_by_one_supplier.call(items, shipping_region) if items.count > 1
+    items_by_many = items_by_many_suppliers.call(items, shipping_region)
 
-    # return items_by_many if send_by_one_supplier?(items_by_one, items_by_many)
-    # binding.pry
-    Success(items_by_many)
+    result = yield resolve_supplier(items_by_one, items_by_many, items)
+
+    Success(result)
   end
 
-  # def send_by_one_supplier?(items_by_one, items_by_many)
-  #   return true if items_by_many.is_a?(NilClass) || items_by_one.is_a?(NilClass) || items_by_many.all?(&:nil?)
-  #
-  #   biggest_delivery_date(items_by_one) <= biggest_delivery_date(items_by_many)
-  # end
-  #
-  # def biggest_delivery_date(array)
-  #   array.flatten.max_by { |k| k[:delivery_date] }[:delivery_date]
-  # end
+  def resolve_supplier(items_by_one, items_by_many, items)
+    return items_by_many if items_by_one.nil?
+    # maybe add special error type
+    return Failure[:not_found, product_name: [items.pluck(:product_name)]] if items_by_one.failure? && items_by_many.failure?
+    return items_by_many if items_by_one.failure?
+    return items_by_one if items_by_many.failure?
+
+    by_one = items_by_one.value!.flatten.max_by { |k| k[:delivery_time] }[:delivery_time]
+    by_many = items_by_many.value!.flatten.max_by { |k| k[:delivery_time] }[:delivery_time]
+    by_one > by_many ? items_by_many : items_by_one
+  end
 end
