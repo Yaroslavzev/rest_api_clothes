@@ -7,6 +7,7 @@ module API
 
       include AppImport[get_operation: "api.v1.stocks.get_operation"]
 
+      # :nocov:
       # rubocop:disable Metrics/MethodLength
       def in_stocks
         result = get_operation.call(params.to_unsafe_h)
@@ -29,6 +30,7 @@ module API
         end
       end
       # rubocop:enable Metrics/MethodLength
+      # :nocov:
     end
   end
 end
