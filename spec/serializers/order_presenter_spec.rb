@@ -13,7 +13,7 @@ describe OrderSerializer do
   end
 
   context "when having a t-shirt and hoodie in the basket" do
-    # TODO: use instance_double
+    # maybe use instance_double
     let(:suppliers_with_staff) { AppContainer["search_service"].call(order[:items], order[:shipping_region]).value! }
     let(:expected_data) do
       { delivery_date: (Date.today + 2).to_s,
